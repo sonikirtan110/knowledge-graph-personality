@@ -232,6 +232,37 @@ Key performance aspects:
     \item Memory-efficient data structures
 \end{itemize}
 
+\section{API Integration}
+
+\subsection{Groq LLM Integration}
+The system integrates with Groq's Large Language Models to enhance personality trait analysis:
+
+\begin{itemize}
+    \item Uses the Mixtral-8x7b-32768 model
+    \item Combines traditional analysis with LLM insights
+    \item Provides more nuanced personality assessments
+\end{itemize}
+
+Example usage with Groq API:
+
+\begin{lstlisting}[language=Python, caption=Groq API Integration Example]
+from kg_personality.api_integration import GroqAPIIntegrator
+from kg_personality.kg_builder import KGBuilder
+
+# Initialize components
+kg = KGBuilder()
+groq_api = GroqAPIIntegrator(api_key="your-api-key")
+
+# Process text with enhanced personality analysis
+text = """Sarah Chen demonstrates exceptional 
+problem-solving skills and creativity."""
+
+# Build graph with enhanced personality analysis
+G = kg.build_from_text(text)
+enhanced_traits = groq_api.enhance_personality_estimation(text)
+kg.merge_personality(G, enhanced_traits)
+\end{lstlisting}
+
 \section{Future Enhancements}
 Planned improvements include:
 
@@ -250,9 +281,9 @@ Planned improvements include:
         \item Interactive graph editing
     \end{itemize}
     
-    \item \textbf{API Integration:}
+    \item \textbf{Additional API Features:}
     \begin{itemize}
-        \item Real LLM integration (e.g., OpenAI)
+        \item Multi-model LLM support
         \item REST API endpoints
         \item Streaming data support
     \end{itemize}

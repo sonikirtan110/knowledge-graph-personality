@@ -2,6 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# LaTeX
+*.aux
+*.log
+*.toc
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
 *.so
 .Python
 env/
