@@ -3,7 +3,7 @@ Groq API integration for enhancing knowledge graph personality analysis.
 """
 import os
 from typing import Dict, List, Optional
-import groq
+from groq import Groq
 from . import config
 from .personality import PersonalityEstimator
 
@@ -19,7 +19,10 @@ class GroqAPIIntegrator:
         if not self.api_key:
             raise ValueError("Groq API key not found. Please provide it in config.py or set GROQ_API_KEY environment variable.")
         
-        self.client = groq.Client(api_key=self.api_key)
+        self.client = Groq(
+            api_key=self.api_key,
+            default_headers={"Groq-Model-Version": "latest"}
+        )
         self.personality_estimator = PersonalityEstimator()
 
     def analyze_text_with_llm(self, text: str) -> Dict[str, float]:
@@ -44,12 +47,22 @@ class GroqAPIIntegrator:
                 "role": "user",
                 "content": prompt
             }],
-            temperature=config.TEMPERATURE
+            temperature=config.TEMPERATURE,
+            max_completion_tokens=config.MAX_COMPLETION_TOKENS,
+            top_p=config.TOP_P,
+            stream=config.STREAM,
+            stop=None,
+            compound_custom=config.COMPOUND_CUSTOM
         )
 
         # Parse the response to get trait scores
         try:
-            response_text = completion.choices[0].message.content
+            # Handle streaming response
+            response_text = ""
+            for chunk in completion:
+                if chunk.choices[0].delta.content:
+                    response_text += chunk.choices[0].delta.content
+            
             # Clean up response to ensure it's valid JSON
             response_text = response_text.strip()
             if not response_text.startswith("{"):
