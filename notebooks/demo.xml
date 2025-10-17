@@ -1,0 +1,22 @@
+<VSCode.Cell language="markdown">
+# Knowledge Graph + Personality Demo
+This notebook demonstrates building a simple knowledge graph from text and attaching personality traits to entity nodes.
+</VSCode.Cell>
+<VSCode.Cell language="python">
+# Run the demo pipeline
+from src.kg_personality.kg_builder import KGBuilder
+from src.kg_personality.personality import PersonalityEstimator
+
+text = open('data/sample.txt').read()
+kg = KGBuilder()
+G = kg.build_from_text(text, source_id='note_doc')
+entities = [n for n in G.nodes() if n.startswith('note_doc_ent_')]
+pe = PersonalityEstimator()
+personality = pe.estimate_for_entities(entities)
+kg.merge_personality(G, personality)
+
+# show nodes
+for n,d in G.nodes(data=True):
+    print(n, d)
+
+</VSCode.Cell>
