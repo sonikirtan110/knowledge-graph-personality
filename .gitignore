@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Configuration files with sensitive data
+src/kg_personality/config.py
+.env
+
 # LaTeX
 *.aux
 *.log

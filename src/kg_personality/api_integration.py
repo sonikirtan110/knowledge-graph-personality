@@ -4,6 +4,7 @@ Groq API integration for enhancing knowledge graph personality analysis.
 import os
 from typing import Dict, List, Optional
 import groq
+from . import config
 from .personality import PersonalityEstimator
 
 class GroqAPIIntegrator:
@@ -14,9 +15,9 @@ class GroqAPIIntegrator:
         Args:
             api_key: Groq API key. If not provided, looks for GROQ_API_KEY environment variable.
         """
-        self.api_key = api_key or os.getenv("GROQ_API_KEY")
+        self.api_key = api_key or os.getenv("GROQ_API_KEY") or config.GROQ_API_KEY
         if not self.api_key:
-            raise ValueError("Groq API key not found. Please provide it or set GROQ_API_KEY environment variable.")
+            raise ValueError("Groq API key not found. Please provide it in config.py or set GROQ_API_KEY environment variable.")
         
         self.client = groq.Client(api_key=self.api_key)
         self.personality_estimator = PersonalityEstimator()
@@ -38,12 +39,12 @@ class GroqAPIIntegrator:
         Text to analyze: {text}'''
 
         completion = self.client.chat.completions.create(
-            model="mixtral-8x7b-32768",  # Groq's most capable model
+            model=config.DEFAULT_MODEL,
             messages=[{
                 "role": "user",
                 "content": prompt
             }],
-            temperature=0.3  # Lower temperature for more consistent scoring
+            temperature=config.TEMPERATURE
         )
 
         # Parse the response to get trait scores
