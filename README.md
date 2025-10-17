@@ -11,6 +11,19 @@ This project implements a system for extracting knowledge graphs from text while
 - Synthetic data generation
 - Comprehensive test suite
 
+## System Architecture
+
+```
+[Input Text] → [NLP Processing] → [Entity Extraction] → [Knowledge Graph] ↔ [Personality Traits]
+```
+
+The system follows a pipeline architecture where:
+1. Input text is processed using spaCy NLP
+2. Entities are extracted and relationships identified
+3. Knowledge graph is constructed using NetworkX
+4. Personality traits are analyzed and integrated
+5. Interactive visualization is generated using pyvis
+
 ## Project Structure
 
 ```
@@ -40,8 +53,12 @@ This project implements a system for extracting knowledge graphs from text while
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/knowledge-graph-personality.git
+git clone https://github.com/sonikirtan110/knowledge-graph-personality.git
 cd knowledge-graph-personality
+
+# Configure Git (if needed):
+git config --global user.name "sonikirtan110"
+git config --global user.email "sonikirtan100@gmail.com"
 ```
 
 2. Create and activate a Python virtual environment:
