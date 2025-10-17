@@ -48,11 +48,9 @@ class GroqAPIIntegrator:
                 "content": prompt
             }],
             temperature=config.TEMPERATURE,
-            max_completion_tokens=config.MAX_COMPLETION_TOKENS,
+            max_tokens=config.MAX_COMPLETION_TOKENS,
             top_p=config.TOP_P,
-            stream=config.STREAM,
-            stop=None,
-            compound_custom=config.COMPOUND_CUSTOM
+            stream=config.STREAM
         )
 
         # Parse the response to get trait scores

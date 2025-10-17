@@ -134,6 +134,44 @@ tests/               # Comprehensive test suite
 documentation/       # Technical documentation
 \end{lstlisting}
 
+\section{API Integration}
+
+\subsection{Groq API Integration}
+The system integrates with Groq's LLM API for enhanced personality analysis:
+
+\begin{itemize}[label=$\bullet$]
+    \item \textbf{Model Integration:} Uses Groq's compound model for trait analysis
+    \item \textbf{Streaming Support:} Implements efficient streaming responses
+    \item \textbf{Enhanced Analysis:} Combines LLM insights with traditional methods
+    \item \textbf{Entity-Level Processing:} Performs per-entity trait estimation
+\end{itemize}
+
+\subsection{API Architecture}
+The API integration follows a layered approach:
+
+\begin{enumerate}[label=\textbf{\arabic*.}, itemsep=0.5em]
+    \item \textbf{API Client Layer:}
+    \begin{itemize}
+        \item Handles authentication and connection
+        \item Manages API rate limits
+        \item Implements error handling and retries
+    \end{itemize}
+    
+    \item \textbf{Analysis Layer:}
+    \begin{itemize}
+        \item Processes LLM responses
+        \item Combines multiple analysis methods
+        \item Provides confidence scores
+    \end{itemize}
+    
+    \item \textbf{Integration Layer:}
+    \begin{itemize}
+        \item Merges LLM insights with graph
+        \item Updates entity traits dynamically
+        \item Maintains data consistency
+    \end{itemize}
+\end{enumerate}
+
 \section{Core Components}
 
 \subsection{Entity Recognition System}
@@ -169,15 +207,17 @@ The system implements the Big Five personality framework:
 \section{Implementation Examples}
 
 \subsection{Basic Usage}
-Here's a complete example of using the system:
+Here's a complete example of using the system with Groq API integration:
 
-\begin{lstlisting}[language=Python, caption=Basic Usage Example]
+\begin{lstlisting}[language=Python, caption=Enhanced Usage Example]
 from kg_personality.kg_builder import KGBuilder
 from kg_personality.personality import PersonalityEstimator
+from kg_personality.api_integration import GroqIntegrator
 
 # Initialize components
 kg = KGBuilder()
 pe = PersonalityEstimator()
+groq = GroqIntegrator()
 
 # Process text and build graph
 text = """
@@ -186,16 +226,44 @@ She excels in Python and machine learning.
 """
 G = kg.build_from_text(text, source_id="doc")
 
-# Extract entities and add personality
+# Extract entities
 entities = [n for n in G.nodes() if n.startswith("doc_ent_")]
-personality = pe.estimate_for_entities(entities)
-kg.merge_personality(G, personality)
 
-# Add relationships
+# Get LLM-enhanced personality analysis
+llm_traits = groq.analyze_traits(text)
+traditional_traits = pe.estimate_for_entities(entities)
+
+# Combine analyses and merge with graph
+combined_traits = pe.combine_analyses(llm_traits, traditional_traits)
+kg.merge_personality(G, combined_traits)
+
+# Add relationships and visualize
 kg.add_relationships()
+kg.export_to_html("knowledge_graph_with_traits.html")
+\end{lstlisting}
 
-# Generate visualization
-kg.export_to_html("knowledge_graph.html")
+\subsection{Test Integration}
+The system includes comprehensive test coverage:
+
+\begin{lstlisting}[language=Python, caption=Test Example]
+def test_groq_integration():
+    # Initialize API integrator
+    integrator = GroqIntegrator()
+    
+    # Test direct LLM analysis
+    traits = integrator.analyze_traits(sample_text)
+    assert all(0 <= v <= 1 for v in traits.values())
+    
+    # Test enhanced estimation
+    combined = integrator.combine_with_traditional(
+        llm_traits=traits,
+        traditional_traits=base_traits
+    )
+    assert len(combined) == 5  # Big Five traits
+    
+    # Test entity-level analysis
+    entity_traits = integrator.analyze_entities(entities)
+    assert all(isinstance(v, dict) for v in entity_traits.values())
 \end{lstlisting}
 
 \subsection{Visualization Features}
