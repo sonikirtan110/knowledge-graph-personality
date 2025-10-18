@@ -13,9 +13,7 @@ This project implements a system for extracting knowledge graphs from text while
 
 ## System Architecture
 
-```
-[Input Text] → [NLP Processing] → [Entity Extraction] → [Knowledge Graph] ↔ [Personality Traits]
-```
+<img src="Fig.png" alt="Figure" id="figure-image" style="max-width:100%;height:auto;" />
 
 The system follows a pipeline architecture where:
 1. Input text is processed using spaCy NLP
